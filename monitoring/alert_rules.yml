@@ -1,0 +1,226 @@
+# Prometheus Alert Rules for FinSecAI
+groups:
+  - name: finsecai_alerts
+    interval: 30s
+    rules:
+      # ===== APPLICATION ALERTS =====
+      
+      - alert: HighErrorRate
+        expr: rate(finsecai_errors_total[5m]) > 0.01
+        for: 5m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} for the last 5 minutes"
+          dashboard: "http://grafana:3000/d/app-health"
+
+      - alert: CriticalErrorRate
+        expr: rate(finsecai_errors_total[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "Critical error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} - immediate action required"
+          runbook: "https://wiki.example.com/runbooks/high-error-rate"
+
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, rate(finsecai_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+          component: application
+        annotations:
+          summary: "High request latency detected"
+          description: "95th percentile latency is {{ $value | humanizeDuration }}"
+
+      - alert: CriticalLatency
+        expr: histogram_quantile(0.95, rate(finsecai_request_duration_seconds_bucket[5m])) > 5
+        for: 2m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "Critical request latency"
+          description: "95th percentile latency is {{ $value | humanizeDuration }} - investigate immediately"
+
+      - alert: ServiceDown
+        expr: up{job="finsecai-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: application
+        annotations:
+          summary: "FinSecAI service is down"
+          description: "The application service has been unreachable for 1 minute"
+          action: "Check service status, review logs, restart if needed"
+
+      # ===== DATABASE ALERTS =====
+
+      - alert: DatabaseConnectionPoolExhausted
+        expr: postgresql_stat_activity_count{state="active"} > 150
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Database connection pool near capacity"
+          description: "{{ $value }} active connections out of 200 max"
+
+      - alert: DatabaseSlowQueries
+        expr: rate(postgresql_slow_queries_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "High rate of slow database queries"
+          description: "{{ $value | humanize }} slow queries per second"
+
+      - alert: DatabaseReplicationLag
+        expr: replication_lag_seconds > 30
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "High database replication lag"
+          description: "Replication lag is {{ $value | humanizeDuration }}"
+
+      - alert: DatabaseDiskUsageHigh
+        expr: (postgresql_database_disk_usage_bytes / 1099511627776) > 0.8
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Database disk usage above 80%"
+          description: "Disk usage is at {{ $value | humanizePercentage }}"
+
+      # ===== CACHE ALERTS =====
+
+      - alert: RedisDiskUsageHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis memory usage critical"
+          description: "Redis is using {{ $value | humanizePercentage }} of allocated memory"
+
+      - alert: RedisConnectionErrors
+        expr: increase(redis_connection_errors_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis connection errors detected"
+          description: "{{ $value }} connection errors in the last 5 minutes"
+
+      # ===== INFRASTRUCTURE ALERTS =====
+
+      - alert: HighCPUUsage
+        expr: node_cpu_usage_percent > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value | humanizePercentage }}"
+
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+        for: 10m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value | humanizePercentage }}"
+
+      - alert: DiskSpaceLowRoot
+        expr: (node_filesystem_avail_bytes{device="/dev/data"} / node_filesystem_size_bytes) < 0.15
+        labels:
+          severity: critical
+          component: infrastructure
+        annotations:
+          summary: "Disk space critically low on root"
+          description: "Only {{ $value | humanizePercentage }} free disk space remaining"
+
+      - alert: DiskIOWaitHigh
+        expr: node_disk_io_wait > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          component: infrastructure
+        annotations:
+          summary: "High disk I/O wait"
+          description: "Disk I/O wait is {{ $value | humanizePercentage }}"
+
+      # ===== PIPELINE ALERTS =====
+
+      - alert: PipelineThroughputLow
+        expr: finsecai_pipeline_throughput_records_per_sec < 100
+        for: 10m
+        labels:
+          severity: warning
+          component: pipeline
+        annotations:
+          summary: "Pipeline throughput below expected threshold"
+          description: "Current throughput: {{ $value | humanize }} records/sec (expected > 100)"
+
+      - alert: PipelineProcessingError
+        expr: increase(finsecai_pipeline_errors_total[10m]) > 50
+        for: 5m
+        labels:
+          severity: critical
+          component: pipeline
+        annotations:
+          summary: "High pipeline processing error rate"
+          description: "{{ $value | humanize }} errors in the last 10 minutes"
+
+      - alert: ModelInferenceSlowdown
+        expr: finsecai_model_inference_duration_seconds_p95 > 5
+        for: 5m
+        labels:
+          severity: warning
+          component: pipeline
+        annotations:
+          summary: "Model inference performance degradation"
+          description: "95th percentile inference time: {{ $value | humanizeDuration }}"
+
+      # ===== SECURITY ALERTS =====
+
+      - alert: HighRateLimitViolations
+        expr: increase(finsecai_rate_limit_violations_total[5m]) > 100
+        for: 2m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "High rate of rate limit violations"
+          description: "{{ $value | humanize }} rate limit violations in the last 5 minutes"
+
+      - alert: SuspiciousAuthFailures
+        expr: increase(finsecai_auth_failures_total[5m]) > 50
+        for: 2m
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "Suspicious authentication failure pattern"
+          description: "{{ $value | humanize }} failed auth attempts in the last 5 minutes"
+
+      - alert: UnauthorizedAPIAccess
+        expr: increase(finsecai_unauthorized_requests_total[5m]) > 20
+        for: 2m
+        labels:
+          severity: critical
+          component: security
+        annotations:
+          summary: "Potential unauthorized API access attempts"
+          description: "{{ $value | humanize }} unauthorized requests in the last 5 minutes"
