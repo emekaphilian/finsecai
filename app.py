@@ -2,11 +2,13 @@
 FinSecAI SOC Command Center - Streamlit Cloud Entry Point
 """
 
-import subprocess
+import os
 import sys
 from pathlib import Path
 
-# Run the main dashboard from dashboards folder
+PROJECT_ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
 if __name__ == "__main__":
-    dashboard_path = Path(__file__).resolve().parent / "dashboards" / "streamlit_app.py"
-    subprocess.run([sys.executable, "-m", "streamlit", "run", str(dashboard_path)])
+    # Import the Streamlit app module directly so Streamlit Cloud can execute it.
+    import dashboards.streamlit_app  # noqa: F401

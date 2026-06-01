@@ -50,7 +50,8 @@ def load_lora_adapter(base_model_name: str,
 
 # ---- usage ----
 BASE_MODEL = "t5-small"
-LORA_ADAPTER_DIR = Path(r"C:\Users\Administrator\Desktop\FinSecAI\models\philian_soc_narrator_lora")
+BASE_DIR = Path(os.path.abspath(os.path.dirname(__file__)))
+LORA_ADAPTER_DIR = BASE_DIR / "models" / "philian_soc_narrator_lora"
 
 DEVICE = "cpu"
 

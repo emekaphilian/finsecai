@@ -4,13 +4,27 @@ Professional Dark Theme - No Authentication
 Multi-Tenant Support with Real MITRE/NIST RAG Integration
 """
 
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import json
 import os
-from pathlib import Path
 from datetime import datetime, timedelta
+
+
+def get_secret(key: str, default: str = "") -> str:
+    """Retrieve secrets from Streamlit secrets first, then environment variables."""
+    try:
+        return st.secrets.get(key, os.getenv(key, default))
+    except Exception:
+        return os.getenv(key, default)
+
 import plotly.express as px
 import plotly.graph_objects as go
 import requests
@@ -20,9 +34,6 @@ import tempfile
 # ============================================================
 # PROJECT SETUP & IMPORTS
 # ============================================================
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-import sys
-sys.path.insert(0, str(PROJECT_ROOT))
 
 from dashboards.style import (
     load_css, 
@@ -90,6 +101,84 @@ def cached_rag_retrieval(query_json: str):
     import json
     query = json.loads(query_json)
     return fusion_retriever(query)
+
+# ============================================================
+# LLM / NLP HELPERS
+# ============================================================
+
+def generate_llm_report_text(incident: dict, provider: str) -> str:
+    """Generate a narrative incident report using an LLM provider or fallback."""
+    prompt = (
+        "You are a SOC analyst writing an incident report. "
+        "Summarize the incident, explain the risk factors, governance flags, "
+        "and provide a short recommended next step in clear language.\n\n"
+        "Incident details:\n"
+    )
+    for key, value in incident.items():
+        prompt += f"- {key}: {value}\n"
+    prompt += (
+        "\nWrite a concise, professional incident report summary for security leadership. "
+        "Keep it under 180 words."
+    )
+
+    try:
+        if "OpenAI" in provider:
+            import openai
+            openai.api_key = get_secret("OPENAI_API_KEY", "")
+            if not openai.api_key:
+                raise RuntimeError("OpenAI key not configured")
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=450,
+                temperature=0.3,
+            )
+            return response.choices[0].message.content.strip()
+
+        if "Claude" in provider:
+            from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+            client = Anthropic(api_key=get_secret("ANTHROPIC_API_KEY", ""))
+            if not client.api_key:
+                raise RuntimeError("Anthropic key not configured")
+            response = client.create_completion(
+                model="claude-3-haiku",
+                prompt=HUMAN_PROMPT + prompt + AI_PROMPT,
+                max_tokens_to_sample=450,
+                temperature=0.3,
+            )
+            return response["completion"].strip()
+
+        if "Cohere" in provider:
+            import cohere
+            client = cohere.Client(get_secret("COHERE_API_KEY", ""))
+            if not client.api_key:
+                raise RuntimeError("Cohere key not configured")
+            response = client.generate(
+                model="command-xlarge-nightly",
+                prompt=prompt,
+                max_tokens=450,
+                temperature=0.3,
+            )
+            return response.text.strip()
+
+        if "Local" in provider:
+            local_url = get_secret("LOCAL_LLM_URL", "http://localhost:11434/api/generate")
+            payload = {"model": get_secret("LOCAL_LLM_MODEL", "llama3"), "prompt": prompt, "max_tokens": 450}
+            response = requests.post(local_url, json=payload, timeout=30)
+            response.raise_for_status()
+            return response.json().get("text", "").strip()
+
+    except Exception as e:
+        fallback_text = (
+            f"LLM provider fallback engaged because: {str(e)}\n\n"
+            "Incident report summary:\n"
+            f"- Incident ID: {incident.get('incident_id', 'N/A')}\n"
+            f"- Risk score: {incident.get('risk_score', 'N/A')}\n"
+            f"- Confidence: {incident.get('confidence', 'N/A')}\n"
+            f"- Governance flags: {incident.get('governance_flags', 'None')}\n"
+            f"- Recommended action: Review the highest risk incidents and escalate flagged cases."
+        )
+        return fallback_text
 
 # ============================================================
 # PAGE CONFIG
@@ -206,6 +295,7 @@ session_defaults = {
     "incidents_df": None,  # Global incidents dataframe for analytics
     "selected_incident_idx": None,
     "baseline_predictions": None,
+    "llm_report_text": {},
     "current_predictions": None,
     "governance_batch": None,
     "rag_framework_cache": {},
@@ -690,7 +780,16 @@ with tab_incidents:
                         st.metric("Avg Risk Score", f"{summary['avg_risk']:.2f}", f"Avg Confidence: {summary['avg_confidence']:.2f}")
                     
                     st.success(f"✅ Successfully analyzed {summary['analyzed_count']} incidents! Check the 📊 Overview tab for distribution charts and risk analysis.")
-                    st.info("💡 Incident table below now shows all analyzed results with risk levels, confidence scores, and governance flags.")
+                    st.info("💡 Incident table below now shows analyzed results with risk levels, confidence scores, and governance flags.")
+                    error_count = len([r for r in results if r["governance_flags"] == "ANALYSIS_ERROR"])
+                    result_summary = (
+                        f"Outcome: {summary['analyzed_count']} of {summary['total_incidents']} incidents analyzed, "
+                        f"{summary['high_risk_count']} high-risk cases, {summary['governance_flags_count']} governance issues flagged, "
+                        f"avg confidence {summary['avg_confidence']:.1%}."
+                    )
+                    if error_count > 0:
+                        result_summary += f" {error_count} incidents had analysis errors."
+                    st.info(result_summary)
                     st.rerun()
         
         with col_btn2:
@@ -1090,6 +1189,50 @@ with tab_analytics:
     incidents_df = analysis["df"] if analysis else raw_data
     
     if incidents_df is not None and len(incidents_df) > 0:
+        if st.button("▶️ Run Analytics"):
+            if raw_data is None or len(raw_data) == 0:
+                st.error("No data available for analytics")
+            else:
+                st.info("🔄 Running analytics across the current dataset...")
+                progress_bar = st.progress(0)
+                results = []
+                for idx, row in raw_data.iterrows():
+                    incident_dict = row.to_dict()
+                    pipeline_result = cached_run_pipeline(json.dumps(incident_dict))
+                    intelligence = pipeline_result.get("intelligence", {})
+                    governance_flags = pipeline_result.get("governance_flags") or []
+                    results.append({
+                        "incident_id": incident_dict.get("incident_id", "N/A"),
+                        "tenant_id": incident_dict.get("tenant_id"),
+                        "tenant_name": incident_dict.get("tenant_name"),
+                        "risk_score": incident_dict.get("risk_score", 0),
+                        "anomaly_score": incident_dict.get("anomaly_score", 0),
+                        "confidence": intelligence.get("confidence", 0),
+                        "evidence_coverage": intelligence.get("evidence_coverage", 0),
+                        "governance_flags": ", ".join(governance_flags),
+                        "explanation": intelligence.get("explanation", ""),
+                    })
+                    progress_bar.progress((idx + 1) / len(raw_data))
+
+                progress_bar.empty()
+                df_results = pd.DataFrame(results)
+                summary = {
+                    "total_incidents": len(results),
+                    "analyzed_count": len([r for r in results if r["governance_flags"] != "ANALYSIS_ERROR"]),
+                    "avg_risk": np.mean([r["risk_score"] for r in results]),
+                    "avg_confidence": np.mean([r["confidence"] for r in results]),
+                    "avg_evidence_coverage": np.mean([r["evidence_coverage"] for r in results]),
+                    "high_risk_count": len([r for r in results if r["risk_score"] > 0.7]),
+                    "governance_flags_count": len([r for r in results if r["governance_flags"] and r["governance_flags"] != "ANALYSIS_ERROR"])
+                }
+                st.session_state.analysis_results[current_tenant] = {
+                    "df": df_results,
+                    "summary": summary,
+                    "timestamp": datetime.now()
+                }
+                st.success("✅ Analytics run complete. Summary and charts are now available.")
+                st.experimental_rerun()
+
         df = incidents_df.copy()
         
         # Synthetic ground truth for demo
@@ -1280,6 +1423,25 @@ with tab_reports:
             incident = df.iloc[selected_idx].to_dict()
             risk_score = incident.get("risk_score", 0)
             
+            if st.button("🤖 Generate LLM Incident Report", key="generate_llm_incident_report"):
+                report_text = generate_llm_report_text(incident, llm_provider)
+                st.session_state.llm_report_text[incident.get("incident_id", "current")] = report_text
+                st.success("✅ LLM incident report generated")
+
+            llm_text = st.session_state.llm_report_text.get(incident.get("incident_id", "current"))
+            if llm_text:
+                st.divider()
+                st.markdown("### 🤖 NLP / LLM Incident Report Summary")
+                st.text_area("Report Narrative", llm_text, height=280)
+                st.download_button(
+                    "⬇️ Download NLP Report Text",
+                    llm_text,
+                    file_name=f"incident_report_{incident.get('incident_id','incident')}.txt",
+                    mime="text/plain",
+                    key="download_llm_report_text"
+                )
+                st.divider()
+
             if st.button("📄 Generate PDF Report", use_container_width=True):
                 try:
                     # Get real MITRE/NIST mappings

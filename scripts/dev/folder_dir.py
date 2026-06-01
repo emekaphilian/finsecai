@@ -1,8 +1,8 @@
 import os
 from pathlib import Path
 
-MODEL_PATH = r"C:\Users\Administrator\Desktop\FinSecAI"
-path = Path(MODEL_PATH)
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+path = Path(PROJECT_ROOT)
 
 print("\n📁 Checking model folder:", path)
 print("-" * 60)

@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from datasets import Dataset
 from transformers import T5Tokenizer, T5ForConditionalGeneration, Trainer, TrainingArguments, DataCollatorForSeq2Seq
@@ -5,9 +6,10 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration, Trainer, Train
 # -----------------------------
 # CONFIG
 # -----------------------------
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 MODEL_PATH = "t5-small"  # starting model
-DATA_PATH = r"C:\Users\Administrator\Desktop\FinSecAI\data\raw\nlp_explanation_training_1000.csv"
-OUTPUT_DIR = r"C:\Users\Administrator\Desktop\FinSecAI\models\finsecai_nlp_model_ft"
+DATA_PATH = os.path.join(PROJECT_ROOT, "data", "raw", "nlp_explanation_training_1000.csv")
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "models", "finsecai_nlp_model_ft")
 MAX_LEN = 128
 BATCH_SIZE = 4
 EPOCHS = 3

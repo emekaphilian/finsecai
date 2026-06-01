@@ -1,7 +1,8 @@
+import os
 from pathlib import Path
 import shutil
 
-PROJECT_ROOT = Path(r"C:\Users\Administrator\Desktop\FinSecAI")
+PROJECT_ROOT = Path(os.path.abspath(os.path.dirname(__file__)))
 
 SRC_NLP = PROJECT_ROOT / "src" / "nlp"
 TARGET = PROJECT_ROOT / "models_nlp"

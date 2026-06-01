@@ -140,10 +140,13 @@ class AlertNotificationManager:
                 "short": False
             })
         
-        # Send to Slack
-        response = requests.post(self.slack_webhook, json=slack_message)
-        response.raise_for_status()
-        logger.info(f"Slack notification sent: {title}")
+        try:
+            response = requests.post(self.slack_webhook, json=slack_message)
+            response.raise_for_status()
+            logger.info(f"Slack notification sent: {title}")
+        except Exception as e:
+            logger.warning(f"Slack notification failed: {str(e)}")
+            return None
     
     def _send_email_notification(
         self,
@@ -207,8 +210,8 @@ class AlertNotificationManager:
             logger.info(f"Email notification sent to {self.email_recipients}: {title}")
         
         except Exception as e:
-            logger.error(f"Failed to send email: {str(e)}")
-            raise
+            logger.warning(f"Failed to send email: {str(e)}")
+            return None
     
     def _send_pagerduty_notification(
         self,
@@ -240,12 +243,16 @@ class AlertNotificationManager:
             }
         }
         
-        response = requests.post(
-            "https://events.pagerduty.com/v2/enqueue",
-            json=pagerduty_payload
-        )
-        response.raise_for_status()
-        logger.info(f"PagerDuty incident created: {title}")
+        try:
+            response = requests.post(
+                "https://events.pagerduty.com/v2/enqueue",
+                json=pagerduty_payload
+            )
+            response.raise_for_status()
+            logger.info(f"PagerDuty incident created: {title}")
+        except Exception as e:
+            logger.warning(f"PagerDuty notification failed: {str(e)}")
+            return None
 
 
 # Global notification manager instance
