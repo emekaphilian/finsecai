@@ -343,7 +343,7 @@ Generative AI Engineer • MLOps Engineer • Cybersecurity-Focused AI Builder
 
 💼 LinkedIn: https://www.linkedin.com/in/emekaogbonna
 
-🌐 Portfolio: https://software-development-projects.vercel.app
+🌐 Portfolio: https:
 
 ---
 
