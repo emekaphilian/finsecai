@@ -1,21 +1,29 @@
 # FinSecAI
 
-[![Streamlit](https://img.shields.io/badge/streamlit-ready-brightgreen)](https://streamlit.io)
-
 <div align="center">
 
-### AI-Powered Financial Security Operations Center (SOC)
+<img src="https://raw.githubusercontent.com/emekaphilian/finsecai/main/docs/images/finsecai-banner.png" alt="FinSecAI Banner" width="100%"/>
 
-Detect fraud. Investigate incidents. Retrieve evidence. Automate response.
+# AI-Powered Financial Security Operations Center (SOC)
+
+### Detect Fraud • Investigate Incidents • Retrieve Evidence • Automate Response
 
 Built for fintechs, banks, payment processors, and enterprise security teams.
 
-[![Streamlit](https://img.shields.io/badge/Streamlit-Live-success?logo=streamlit)](https://finsecai-7v5s3tk8jyobyyecqedgpr.streamlit.app/)
-![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
-![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-purple)
-![LangGraph](https://img.shields.io/badge/LangGraph-Agentic_AI-green)
-![OpenAI](https://img.shields.io/badge/OpenAI-LLM-black)
-![License](https://img.shields.io/badge/License-MIT-blue)
+<br>
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Streamlit-success?style=for-the-badge)](https://finsecai-7v5s3tk8jyobyyecqedgpr.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge\&logo=python)](https://python.org)
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-red?style=for-the-badge\&logo=streamlit)](https://streamlit.io)
+[![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-purple?style=for-the-badge)]()
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agent_Orchestration-green?style=for-the-badge)]()
+[![OpenAI](https://img.shields.io/badge/OpenAI-LLM-black?style=for-the-badge\&logo=openai)]()
+
+<br>
+
+### 🌍 Built for Secure Financial Operations Across Africa and Beyond
+
+[🚀 Live Demo](https://finsecai-7v5s3tk8jyobyyecqedgpr.streamlit.app/) • [💻 GitHub Repository](https://github.com/emekaphilian/finsecai)
 
 </div>
 
@@ -23,19 +31,23 @@ Built for fintechs, banks, payment processors, and enterprise security teams.
 
 # 🚀 Overview
 
-FinSecAI is an enterprise-grade Financial Security Operations Center (SOC) that combines machine learning, retrieval-augmented intelligence, large language models, and real-time monitoring into a unified platform for fraud detection, compliance analysis, and incident response.
+FinSecAI is an enterprise-grade Financial Security Operations Center (SOC) that combines Machine Learning, Retrieval-Augmented Intelligence, Large Language Models, and Real-Time Monitoring into a unified platform for fraud detection, compliance analysis, risk intelligence, and incident response.
 
 Traditional fraud monitoring tools generate alerts.
 
-FinSecAI helps security teams understand:
+FinSecAI goes further by helping security teams understand:
 
-* What happened
-* Why it happened
-* How severe it is
-* What evidence supports the finding
-* What actions should be taken next
+✅ What happened
 
-The platform leverages AI to transform raw security signals into actionable intelligence.
+✅ Why it happened
+
+✅ How severe it is
+
+✅ What evidence supports the finding
+
+✅ What actions should be taken next
+
+The platform transforms raw security events into actionable intelligence through AI-powered detection, investigation, summarization, retrieval, and response workflows.
 
 ---
 
@@ -51,12 +63,83 @@ Security teams often struggle with:
 * Compliance reporting overhead
 * Limited contextual intelligence
 * Fragmented monitoring systems
+* Rising fraud sophistication
 
-FinSecAI addresses these challenges by combining detection, investigation, retrieval, summarization, and alerting into a single workflow.
+FinSecAI addresses these challenges by combining detection, investigation, retrieval, summarization, and alerting into a single AI-powered workflow.
 
 ---
 
-# 🏗️ Platform Architecture
+# 🎥 Live Demo
+
+<div align="center">
+
+### 🚀 Experience FinSecAI
+
+[![Launch FinSecAI](https://img.shields.io/badge/Launch_FinSecAI-Live_Demo-success?style=for-the-badge\&logo=streamlit)](https://finsecai-7v5s3tk8jyobyyecqedgpr.streamlit.app/)
+
+</div>
+
+---
+
+# 📸 Platform Screenshots
+
+## Executive Dashboard
+
+<p align="center">
+  <img src="docs/images/dashboard-overview.png" alt="Dashboard Overview" width="1000">
+</p>
+
+Real-time visibility into incidents, fraud alerts, operational metrics, and security posture.
+
+---
+
+## Fraud Detection & Risk Analysis
+
+<p align="center">
+  <img src="docs/images/fraud-analysis.png" alt="Fraud Detection" width="1000">
+</p>
+
+Machine learning-powered fraud detection with risk scoring, anomaly indicators, and investigation workflows.
+
+---
+
+## AI Incident Intelligence
+
+<p align="center">
+  <img src="docs/images/incident-summary.png" alt="Incident Intelligence" width="1000">
+</p>
+
+LLM-generated incident summaries, contextual explanations, severity assessments, and response recommendations.
+
+---
+
+## Evidence Retrieval Engine
+
+<p align="center">
+  <img src="docs/images/evidence-retrieval.png" alt="Evidence Retrieval" width="1000">
+</p>
+
+FAISS-powered semantic retrieval system providing contextual evidence and supporting intelligence.
+
+---
+
+## Alerting & Response Center
+
+<p align="center">
+  <img src="docs/images/alert-center.png" alt="Alert Center" width="1000">
+</p>
+
+Integrated Slack, Email, and PagerDuty alerting for rapid response and escalation workflows.
+
+---
+
+# 🏗️ System Architecture
+
+<p align="center">
+  <img src="docs/images/finsecai-architecture.png" alt="FinSecAI Architecture" width="1100">
+</p>
+
+### Architecture Flow
 
 ```text
 Transaction Streams
@@ -94,48 +177,49 @@ SOC Dashboard
 
 Identify suspicious financial activity using machine learning-powered transaction analysis.
 
-### Capabilities
+### Features
 
-* Transaction risk scoring
-* Behavioral anomaly detection
-* Fraud pattern recognition
-* Real-time threat identification
-* Explainable risk indicators
+* Transaction Risk Scoring
+* Fraud Pattern Recognition
+* Behavioral Anomaly Detection
+* Real-Time Threat Identification
+* Explainable Risk Indicators
+* Security Event Classification
 
 ---
 
 ## 🧠 AI-Powered Incident Analysis
 
-FinSecAI uses a fine-tuned T5 model and modern LLMs to transform technical events into analyst-friendly intelligence.
+FinSecAI leverages fine-tuned NLP models and modern LLMs to transform technical events into analyst-friendly intelligence.
 
 ### Outputs
 
-* Incident summaries
-* Risk narratives
-* Executive-ready reports
-* Investigation recommendations
-* Threat explanations
+* Incident Summaries
+* Executive Reports
+* Risk Narratives
+* Investigation Recommendations
+* Threat Explanations
+* Analyst Briefings
 
 ---
 
-## 📚 Evidence Retrieval with FAISS
+## 📚 Retrieval-Augmented Intelligence
 
-Security analysts need context.
-
-FinSecAI uses vector search to retrieve relevant evidence and historical information that supports investigations.
+FinSecAI uses FAISS vector search to retrieve contextual evidence and historical intelligence relevant to ongoing investigations.
 
 ### Benefits
 
-* Faster investigations
-* Context-aware analysis
-* Source-backed recommendations
-* Reduced analyst workload
+* Faster Investigations
+* Source-Backed Recommendations
+* Context-Aware Analysis
+* Reduced Analyst Workload
+* Improved Decision-Making
 
 ---
 
 ## 🤖 Multi-LLM Intelligence Layer
 
-Choose the best AI provider for your environment.
+Flexible AI infrastructure supporting multiple language model providers.
 
 ### Supported Providers
 
@@ -143,7 +227,7 @@ Choose the best AI provider for your environment.
 * Anthropic Claude
 * Cohere
 * Local LLMs
-* Custom integrations
+* Custom Enterprise Models
 
 ---
 
@@ -151,28 +235,28 @@ Choose the best AI provider for your environment.
 
 Respond faster to critical incidents.
 
-### Integrations
+### Integrated Channels
 
 * Slack
 * Email (SMTP)
 * PagerDuty
 
-Alerts include contextual information and AI-generated summaries to accelerate response times.
+Alerts include AI-generated summaries, severity classifications, and recommended next actions.
 
 ---
 
-## 📊 Security Operations Dashboard
+## 📊 SOC Dashboard
 
-A centralized interface for monitoring, investigation, and response.
+A centralized interface for monitoring, investigation, response, and reporting.
 
 ### Dashboard Features
 
-* Incident tracking
-* Risk analytics
-* Investigation workflows
-* Alert management
-* Security metrics
-* Operational reporting
+* Incident Tracking
+* Fraud Monitoring
+* Risk Analytics
+* Alert Management
+* Security Metrics
+* Executive Reporting
 
 ---
 
@@ -182,10 +266,11 @@ Built for organizations managing multiple customers, business units, or environm
 
 Features include:
 
-* Tenant isolation
-* Secure data separation
-* Role-based access controls
-* Scalable monitoring
+* Tenant Isolation
+* Secure Data Separation
+* Role-Based Access Controls
+* Scalable Monitoring
+* Enterprise Readiness
 
 ---
 
@@ -195,26 +280,56 @@ Production systems require visibility.
 
 FinSecAI supports enterprise monitoring through:
 
-* Prometheus metrics
-* Grafana dashboards
-* Application health monitoring
-* Operational analytics
+* Prometheus Metrics
+* Grafana Dashboards
+* Application Health Monitoring
+* Operational Analytics
+* System Performance Tracking
 
 ---
 
-# 🛠 Technology Stack
+# 🎬 Example Investigation Workflow
 
-| Layer            | Technology                    |
-| ---------------- | ----------------------------- |
-| Frontend         | Streamlit                     |
-| Backend          | Python                        |
-| Machine Learning | Scikit-Learn                  |
-| NLP              | T5, OpenAI, Anthropic, Cohere |
-| Agent Framework  | LangGraph                     |
-| Vector Search    | FAISS                         |
-| Monitoring       | Prometheus, Grafana           |
-| Alerting         | Slack, SMTP, PagerDuty        |
-| Deployment       | Streamlit Cloud               |
+```text
+Suspicious Transaction
+          │
+          ▼
+Fraud Detection Model
+          │
+          ▼
+Incident Created
+          │
+          ▼
+AI Summary Generated
+          │
+          ▼
+Evidence Retrieved
+          │
+          ▼
+Risk Score Calculated
+          │
+          ▼
+Alert Triggered
+          │
+          ▼
+SOC Analyst Review
+```
+
+---
+
+# 🛠️ Technology Stack
+
+| Layer               | Technology                |
+| ------------------- | ------------------------- |
+| Frontend            | Streamlit                 |
+| Backend             | Python                    |
+| Machine Learning    | Scikit-Learn              |
+| NLP & LLMs          | OpenAI, Anthropic, Cohere |
+| Agent Orchestration | LangGraph                 |
+| Vector Search       | FAISS                     |
+| Monitoring          | Prometheus, Grafana       |
+| Alerting            | Slack, SMTP, PagerDuty    |
+| Deployment          | Streamlit Cloud           |
 
 ---
 
@@ -242,46 +357,48 @@ FinSecAI/
 │   └── Datasets & Vector Indexes
 │
 ├── docs/
-│   └── Documentation
+│   ├── images/
+│   └── deployment-guides/
 │
 ├── app.py
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
 # ⚡ Quick Start
 
-### Clone Repository
+## Clone Repository
 
 ```bash
 git clone https://github.com/emekaphilian/finsecai.git
 cd finsecai
 ```
 
-### Create Environment
+## Create Virtual Environment
 
 ```bash
 python -m venv .venv
 ```
 
-### Activate Environment
+## Activate Environment
 
 ```bash
 # Windows
 .venv\Scripts\activate
 
-# Linux/Mac
+# Linux / macOS
 source .venv/bin/activate
 ```
 
-### Install Dependencies
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Configure Secrets
+## Configure Secrets
 
 Create:
 
@@ -289,7 +406,7 @@ Create:
 .streamlit/secrets.toml
 ```
 
-Configure:
+Add:
 
 ```toml
 OPENAI_API_KEY=""
@@ -303,7 +420,7 @@ DATABASE_URL=""
 REDIS_URL=""
 ```
 
-### Launch Application
+## Run Application
 
 ```bash
 streamlit run app.py
@@ -317,11 +434,11 @@ FinSecAI is designed for:
 
 * Fintech Companies
 * Commercial Banks
-* Payment Processors
-* Financial Security Teams
-* Compliance Teams
-* Risk Management Departments
-* Security Operations Centers
+* Digital Payment Providers
+* Enterprise Security Teams
+* Compliance Departments
+* Risk Management Teams
+* Security Operations Centers (SOC)
 
 ---
 
@@ -333,18 +450,55 @@ FinSecAI aims to become an intelligent financial security platform that helps or
 
 ---
 
-# 👨‍💻 Author
+# 📈 Business Impact
 
-### Emeka Philian Ogbonna
+✔ Accelerates Fraud Investigations
 
-Generative AI Engineer • MLOps Engineer • Cybersecurity-Focused AI Builder
+✔ Improves Incident Response Time
 
-📧 Email: [emekaphilian@gmail.com](mailto:emekaphilian@gmail.com)
+✔ Enhances Compliance Monitoring
 
-💼 LinkedIn: https://www.linkedin.com/in/emekaogbonna
+✔ Reduces Manual Security Analysis
 
-🌐 Portfolio: https:
+✔ Provides Explainable AI-Driven Intelligence
+
+✔ Centralizes Security Operations
 
 ---
 
-> Building intelligent systems for secure financial operations across Africa and beyond.
+# 🚀 Future Roadmap
+
+* Advanced Agentic AI Workflows
+* Autonomous Investigation Agents
+* Regulatory Compliance Assistant
+* Graph-Based Threat Intelligence
+* Real-Time Streaming Analytics
+* Kubernetes Deployment Support
+* Enterprise Authentication (SSO)
+* Model Monitoring & Evaluation
+
+---
+
+# 👨‍💻 Author
+
+## Emeka Philian Ogbonna
+
+**Generative AI Engineer • MLOps Engineer • Applied AI Builder**
+
+📧 Email: [emekaphilian@gmail.com](mailto:emekaphilian@gmail.com)
+
+💼 LinkedIn: https://linkedin.com/in/emekaogbonna
+
+🌐 Portfolio: https://software-development-projects.vercel.app
+
+💻 GitHub: https://github.com/emekaphilian
+
+---
+
+<div align="center">
+
+### ⭐ If you find this project valuable, consider giving it a star.
+
+**Building intelligent systems for secure financial operations across Africa and beyond.**
+
+</div>
