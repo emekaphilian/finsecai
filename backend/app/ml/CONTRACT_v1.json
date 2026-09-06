@@ -1,0 +1,49 @@
+﻿{
+  "finsecai_ml_contract_v1": {
+    "generated_at": "2026-08-09T15:00:00Z",
+    "feature_schema": {
+      "source": "backend/app/ml/features.py",
+      "count": 12,
+      "names": ["log_amount","is_transfer","is_withdrawal","is_payment","is_deposit","device_reuse_count","is_device_missing","is_high_amount","is_structuring_band","velocity_1h","user_amount_zscore","is_new_device_for_user"],
+      "parity_rule": "train.py must use build_features_from_values() from features.py, same _encode() as runtime"
+    },
+    "artifact_contract": {
+      "required_files": ["risk_classifier.joblib","anomaly_detector.joblib","model_metadata.json"],
+      "metadata_required": ["model_version","trained_at","feature_names","eval_metrics","artifact_checksums","reference_distribution","lifecycle_status"],
+      "integrity": "RiskModel._verify_artifact_integrity fails closed on checksum mismatch",
+      "forbidden": ["model.joblib","encoders.joblib","backend/artifacts/production/"]
+    },
+    "registry_contract": {
+      "root": "backend/app/ml/artifacts/",
+      "versions_dir": "versions/",
+      "active_pointer": "active_version.json",
+      "api": "model_registry.py: register_version(), get_active_version(), set_active_version(), promote_to_production()",
+      "promotion_rule": "promote_to_production() validates version exists and annotates metadata, never deletes",
+      "status_lifecycle": ["EXPERIMENTAL","EVALUATED","VALIDATION_FAILED","CANDIDATE","APPROVED","ACTIVE","RETIRED"],
+      "enforcement": "VALIDATION_FAILED must never be promotable - future: add status field check in promote_to_production()"
+    },
+    "evaluation_contract": {
+      "required_metrics": ["roc_auc","pr_auc","average_precision","precision","recall","f1","precision_at_k","recall_at_k","alert_volume","calibration","threshold_analysis"],
+      "threshold_analysis": "must produce a list of rows with threshold, precision, recall, alerts, alert_rate",
+      "leakage_checks": ["encoders fit only on train","no id fields as features","no target leakage","train/test no overlap"]
+    },
+    "models": {
+      "bootstrap-8f539257669e": {
+        "status": "ACTIVE",
+        "source": "synthetic bootstrap 20k",
+        "location": "backend/app/ml/artifacts/versions/bootstrap-8f539257669e/",
+        "contract_compliant": true
+      },
+      "69519e58f5bc": {
+        "status": "VALIDATION_FAILED",
+        "reason": "DATA_LEAKAGE: LabelEncoders fit on full data before split + TransactionID used as device_id (unique per row memorization). Schema mismatch: 5 encoded IDs vs 12 production features. Wrong artifact names and wrong location (bypassed registry). Original ROC 0.9429 INVALIDATED, corrected ROC 0.7779 PR-AUC 0.0625",
+        "original_metrics": {"roc_auc":0.9428838997953406,"precision":0.02845,"recall":0.8532,"f1":0.05507},
+        "corrected_metrics": {"roc_auc":0.7779,"pr_auc":0.0625,"prevalence":0.004058},
+        "threshold_092": {"precision":0.6818,"recall":0.0485,"alerts":418,"alert_rate":0.000289},
+        "location": "backend/artifacts/research/ieee_paysim_cc/69519e58f5bc/",
+        "promotable": false,
+        "preserve_reason": "evidence of leakage detection working"
+      }
+    }
+  }
+}

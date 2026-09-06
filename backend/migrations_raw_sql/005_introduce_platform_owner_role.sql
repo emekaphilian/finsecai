@@ -1,0 +1,5 @@
+-- The users.role column is already VARCHAR, so no schema alteration is needed.
+-- This migration intentionally makes no role assignment: platform ownership is
+-- an explicit operational decision and no existing account may be promoted.
+-- Valid roles after this release are owner, admin, compliance_officer, analyst,
+-- and viewer. Unknown roles remain denied by the application permission map.

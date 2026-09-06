@@ -1,5 +1,0 @@
-{"alert_id": "txn_1007", "analyst": "analyst", "label": "true_positive", "confidence": 1.0, "notes": "", "timestamp": "2025-12-16T23:28:24.065400"}
-{"alert_id": "txn_2167", "analyst": "analyst", "label": "false_positive", "confidence": 1.0, "notes": "", "timestamp": "2025-12-16T23:36:02.470863"}
-{"alert_id": "txn_2167", "analyst": "analyst", "label": "false_positive", "confidence": 1.0, "notes": "", "timestamp": "2025-12-16T23:36:32.453760"}
-{"alert_id": "txn_2167", "analyst": "analyst", "label": "false_positive", "confidence": 1.0, "notes": "", "timestamp": "2025-12-16T23:36:38.858729"}
-{"timestamp": "2025-12-18T19:54:52.238816", "alert_id": "txn_9161", "analyst": "analyst", "label": "false_positive", "confidence": 1.0, "model_score": null, "features": null, "notes": ""}

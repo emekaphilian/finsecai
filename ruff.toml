@@ -1,0 +1,9 @@
+# Ruff configuration for FinSecAI
+
+include = ["backend/app/**/*.py"]
+line-length = 100
+
+[lint]
+ignore = ["E402"]
+
+[format]

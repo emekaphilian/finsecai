@@ -1,0 +1,3 @@
+-- Track temporary credentials without changing existing passwords or users.
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS must_change_password BOOLEAN NOT NULL DEFAULT FALSE;

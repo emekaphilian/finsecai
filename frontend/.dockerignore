@@ -1,0 +1,12 @@
+# The frontend image must always be compiled from the checked-in source.  In
+# particular, do not copy a developer's Next.js cache or OS-specific modules
+# into the Docker build context: both can make an old UI appear to survive a
+# rebuild.
+node_modules
+.next
+.env.local
+.env.*.local
+npm-debug.log*
+*.log
+.git
+.gitignore
